@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Sertifikat Kelulusan Siswa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+        
+        .certificate-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .body-font {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .certificate {
+                width: 100%;
+                height: 100vh;
+                margin: 0;
+                padding: 40px;
+                box-shadow: none;
+            }
+        }
+        
+        .ornament {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .certificate-border {
+            background: linear-gradient(45deg, #1e40af, #3b82f6, #60a5fa);
+            padding: 3px;
+            border-radius: 12px;
+        }
+        
+        .certificate-inner {
+            background: white;
+            border-radius: 9px;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen body-font">
+    <!-- Form Input -->
+    <div class="no-print container mx-auto px-4 py-8">
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Generator Sertifikat Kelulusan</h1>
+            
+            <form id="certificateForm" class="space-y-4">
+                <div>
+                    <label for="nisn" class="block text-sm font-medium text-gray-700 mb-2">NISN Siswa</label>
+                    <input type="text" id="nisn" name="nisn" value="232410111" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Masukkan NISN" required>
+                </div>
+                
+                <div>
+                    <label for="nama" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                    <input type="text" id="nama" name="nama" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Nama lengkap siswa" required>
+                </div>
+                
+                <div>
+                    <label for="sekolah" class="block text-sm font-medium text-gray-700 mb-2">Nama Sekolah</label>
+                    <input type="text" id="sekolah" name="sekolah" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Nama sekolah" required>
+                </div>
+                
+
+                
+                <div>
+                    <label for="tahun" class="block text-sm font-medium text-gray-700 mb-2">Tahun Lulus</label>
+                    <input type="number" id="tahun" name="tahun" value="2024" min="2020" max="2030"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           required>
+                </div>
+                
+                <button type="submit" 
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+                    Buat Sertifikat
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Certificate -->
+    <div id="certificate" class="certificate hidden print-only">
+        <div class="certificate-border h-full">
+            <div class="certificate-inner h-full p-12 flex flex-col justify-between">
+                <!-- Header -->
+                <div class="text-center">
+                    <div class="ornament text-6xl mb-4">🎓</div>
+                    <h1 class="certificate-font text-4xl font-bold text-blue-800 mb-2">SERTIFIKAT KELULUSAN</h1>
+                    <div class="w-32 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto mb-6"></div>
+                    <p class="text-lg text-gray-600">Diberikan kepada:</p>
+                </div>
+
+                <!-- Main Content -->
+                <div class="text-center flex-grow flex flex-col justify-center">
+                    <h2 id="cert-nama" class="certificate-font text-5xl font-bold text-gray-800 mb-8 border-b-2 border-blue-200 pb-4 mx-8"></h2>
+                    
+                    <div class="space-y-4 text-lg text-gray-700">
+                        <p>dengan <strong>NISN: <span id="cert-nisn" class="text-blue-600"></span></strong></p>
+                        <p>telah menyelesaikan pendidikan di</p>
+                        <p class="text-2xl font-semibold text-blue-800" id="cert-sekolah"></p>
+                        <p>pada tahun <span id="cert-tahun" class="font-bold text-blue-800"></span></p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex justify-between items-end">
+                    <div class="text-center">
+                        <div class="ornament text-3xl mb-2">🏆</div>
+                        <p class="text-sm text-gray-500">Prestasi Terbaik</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-sm text-gray-600 mb-4">Kepala Sekolah</p>
+                        <!-- Signature SVG -->
+                        <div class="mb-4">
+                            <svg width="120" height="60" viewBox="0 0 120 60" class="mx-auto">
+                                <path d="M10 40 Q20 20, 30 35 Q40 50, 50 30 Q60 15, 70 40 Q80 55, 90 25 Q100 10, 110 45" 
+                                      stroke="#1e40af" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                <path d="M15 45 Q25 35, 35 50 Q45 25, 55 45 Q65 35, 75 50 Q85 30, 95 40" 
+                                      stroke="#1e40af" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <!-- School Stamp -->
+                        <div class="mb-2">
+                            <svg width="80" height="80" viewBox="0 0 80 80" class="mx-auto opacity-60">
+                                <circle cx="40" cy="40" r="35" stroke="#dc2626" stroke-width="2" fill="none"/>
+                                <circle cx="40" cy="40" r="25" stroke="#dc2626" stroke-width="1" fill="none"/>
+                                <text x="40" y="35" text-anchor="middle" font-size="8" fill="#dc2626" font-weight="bold">STEMPEL</text>
+                                <text x="40" y="45" text-anchor="middle" font-size="8" fill="#dc2626" font-weight="bold">SEKOLAH</text>
+                                <text x="40" y="55" text-anchor="middle" font-size="6" fill="#dc2626">RESMI</text>
+                            </svg>
+                        </div>
+                        <div class="w-32 border-b-2 border-gray-400 mb-2"></div>
+                        <p class="text-sm font-medium">Drs. Usman M. Pd</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="ornament text-3xl mb-2">⭐</div>
+                        <p class="text-sm text-gray-500" id="cert-tanggal"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Button -->
+    <div class="no-print fixed bottom-6 right-6">
+        <button id="printBtn" onclick="printCertificate()" 
+                class="hidden bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-full shadow-lg transition duration-200">
+            🖨️ Cetak Sertifikat
+        </button>
+    </div>
+
+    <script>
+        document.getElementById('certificateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Ambil data dari form
+            const nisn = document.getElementById('nisn').value;
+            const nama = document.getElementById('nama').value;
+            const sekolah = document.getElementById('sekolah').value;
+            const tahun = document.getElementById('tahun').value;
+            
+            // Validasi input
+            if (!nisn || !nama || !sekolah || !tahun) {
+                alert('Mohon lengkapi semua data!');
+                return;
+            }
+            
+            // Isi data ke sertifikat
+            document.getElementById('cert-nisn').textContent = nisn;
+            document.getElementById('cert-nama').textContent = nama.toUpperCase();
+            document.getElementById('cert-sekolah').textContent = sekolah;
+            document.getElementById('cert-tahun').textContent = tahun;
+            
+            // Set tanggal hari ini
+            const today = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                timeZone: 'Asia/Jakarta'
+            };
+            document.getElementById('cert-tanggal').textContent = today.toLocaleDateString('id-ID', options);
+            
+            // Tampilkan sertifikat dan tombol cetak
+            document.getElementById('certificate').classList.remove('hidden');
+            document.getElementById('printBtn').classList.remove('hidden');
+            
+            // Scroll ke sertifikat
+            document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        function printCertificate() {
+            // Sembunyikan form sementara untuk print
+            const form = document.querySelector('.no-print');
+            const originalDisplay = form.style.display;
+            
+            // Print
+            window.print();
+        }
+        
+        // Auto-fill NISN yang sudah diberikan
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('nisn').value = '232410111';
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975fd7cc900126da',t:'MTc1NjM0MjUyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
